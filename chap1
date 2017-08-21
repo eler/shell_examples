@@ -1,0 +1,326 @@
+1.局域网共享访问
+smb://10.10.24.18
+
+2.服务器访问
+ssh 10.10.24.96
+*123
+ssh root@10.10.24.96
+*123
+
+3.复制文件 从本地到服务器端
+scp -r trainData.zip zilong@10.10.24.96:/home/zilong/
+
+4.解压到指定目录
+tar zxvf  kleandisk-2.1.tar.gz －C /home/
+
+5.文件编辑
+vi read.txt 你直接按i进入编辑模式就可以添加内容，好了按ESC退出编辑模式，输入命令：:wq     ，回车就是保存退出了。不懂建议先搜索vi操作。
+“vi + filename” ：打开文件，并将光标置于最后一行首，注意，那个+号也是一个命令 
+
+6.单个文件拷贝
+cp a.txt /home/b.txt
+cp -b b.txt bb.txt
+
+7.所有文件拷贝
+cp -Rf /home/user1/* /root/temp/
+将 /home/user1目录下的所有东西拷到/root/temp/下而不拷贝user1目录本身。
+即格式为：cp -Rf 原路径/ 目的路径/
+
+8.查看文件总数量
+ls |wc -l
+
+9.编辑中要删除多行的话，可以用 ：5, 9 de
+
+
+10.将文件夹内所有文件名写入txt
+ls /home/ionadmin/wrk/FileRead/*.txt > name.txt
+
+
+11.chat即时通讯
+#mbcv ******
+
+12.bash权限不足
+例如：   bash: ./configure: 权限不够
+给文件加上可执行权限： chmod +x configure
+再输入 ./configure 就可以了;
+
+13.训练测试，批处理把图片大小设置为256*256
+#!/bin/bash
+for name in /home/wanglong/dataTest/val2/*.jpg; 
+do
+convert -resize 256x256\! $name $name
+done
+
+14.删除文件夹实例：
+rm -rf /var/log/httpd/access
+将会删除/var/log/httpd/access目录以及其下所有文件、文件夹
+删除文件使用实例：
+rm -f /var/log/httpd/access.log
+将会强制删除/var/log/httpd/access.log这个文件
+
+15.杀死进程
+ps -e | grep flash
+【5748 ?        00:00:00 flash-player-pr】
+kill -9 5748
+
+16.解文件夹下权限
+sudo chmod -R 777 INRIAPerson
+
+17.用户切换
+su
+su xx
+
+18.创建目录
+mkdir temp
+
+19.批处理转换图片格式，删除旧图
+for i in *.png ; do convert "$i" "${i%.*}.jpeg" ;rm "$i"; done
+
+20.
+ 查看哪个进程占用了859端口： 
+ lsof -i:859 
+
+查看进程号24907进程： 
+ps -ef|grep 24907 
+ 
+杀进程：
+kill -s 9 1827 
+
+21.查看文件位置
+dpkg -L git
+find / -name git
+
+22.批处理 文件名加前缀
+ for i in `ls`
+> do
+> mv $i abc_$i
+> done
+23.批处理 txt文本内每行添加前缀
+nl -s apple pre.txt | cut -c7- >> pre2.txt
+
+24.增加环境变量
+sudo gedit /etc/profile
+export newone=xxx
+
+25.代理下载
+$ sudo apt-get install proxychains
+$ sudo vim /etc/proxychains.conf 
+$ proxychains wget -c http://www.vision.caltech.edu/malaa/datasets/caltech-lanes/caltech-lanes.zip
+
+26.添加lib
+vim .bashrc 
+export LD_LIBRARY_PATH=/usr/local/cuda-7.5/lib64:$LD_LIBRARY_PATH
+
+27.ssh 用法
+sslocal -s 45.78.xx.xx -p 8888 -k xx -l 1080 --fast-open &
+ssserver -p8088 -k xx 
+
+28.windows下ls按创建时间排序文件
+ls -rt >> lists.txt
+29.按创建时间排序文件
+linux下
+ls -rt >> lists.txt
+windows下
+dir/oD /b >lists.txt 
+
+30.so文件识别
+因为/etc/ld.so.conf文件的内容是include /etc/ld.so.conf.d/*.conf
+1. 将所有的用户需要用到的库放到/usr/locab； 
+2. 在/etc/ld.so.conf.d/目录下新建文件usr-libs.conf，内容是：/usr/local/lib 
+3. #sudo ldconfig
+
+31.权限
+7:rwx 6:rw- 5:r-x 4:r-- 0:---
+
+32.vnc
+server:
+sudo apt-get install vnc4server
+sudo apt-get install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+vncpasswd
+vim xstartup
+[
+#!/bin/sh  
+  
+# Uncomment the following two lines for normal desktop:  
+export XKL_XMODMAP_DISABLE=1  
+ unset SESSION_MANAGER  
+# exec /etc/X11/xinit/xinitrc  
+unset DBUS_SESSION_BUS_ADDRESS  
+  
+gnome-panel &  
+gnmoe-settings-daemon &  
+metacity &  
+nautilus &  
+gnome-terminal &  
+]
+chmod +x ~/.vnc/xstartup
+vncserver :1
+vncclient:
+sudo apt-get install xvnc4viewer
+vncviewer 服务端IP:1(打开远程)
+杀server：
+vncserver -kill :1
+
+33.【新增用户】
+useradd -m zilong
+passwd zilong
+
+首先，增加sudoers文件的写权限： 
+chmod u+w /etc/sudoers，
+然后vim /etc/sudoers 找到 root ALL=(ALL) ALL 在这行下边添加 user1 ALL=(ALL) ALL (ps:user1代表是你要添加sudo权限的用户名),
+最后除去sudoers文件的写权限： chmod u-w /etc/sudoers
+
+
+34【查看显卡】
+lspci -vnn | grep VGA -A 12
+lshw -C display
+35【显卡驱动】
+sudo lshw -c video | grep configuration
+modinfo vmwgfx
+36【加权限】
+chmod 777 ./directory
+37【清空回收站】
+rm -fr ~/.local/share/Trash/files/*
+38【查看磁盘使用情况】
+df -hl
+du -h --max-depth=1 /home/user
+38【多cpu】
+make -j8
+
+39【shell为空】
+临时处理 敲 bash 。 查看/etc/passwd中的文件， shell字段 是空值。
+40【要求已满足，无法安装的问题】
+I had to enable the library for my own user. The flag: --user, did the trick for me.
+sudo pip uninstall xx
+pip install --user xx
+But without first uninstalling it, I would get requirement already satisfied message.
+41【网络重启】
+执行 vim /etc/NetworkManager/NetworkManager.conf     将managed=false 改成true
+sudo service network-manager restart
+42【删除】
+gpasswd -d tml smbuser
+正在将用户“tml”从“smbuser”组中删除
+43【smb】
+sudo apt-get install samba
+vim /etc/samba/smb.conf
+security = user
+
+
+[share]
+    comment = New Share Path
+    path = /path/to/share/folder
+    browsable = yes
+    guest ok = yes
+    read only = no
+    create mask = 0755
+
+
+sudo smbpasswd -a <username>
+sudo restart smbd
+sudo restart nmbd
+44【opencv查看版本】
+pkg-config --modversion opencv
+【update出错 nvidia】
+sudo rm -vf /var/lib/apt/lists/*
+sudo apt-get update
+
+
+45【软链接更新】
+rm gcc
+ln -s /usr/bin/gcc-4.8 gcc
+
+
+46【环境变量】
+export PATH=/home/yan/share/usr/local/arm/3.4.1/bin:$PATH
+直接输入为临时设置。永久设置则在下列文件中输入：
+/etc/profile  
+/etc/environment
+source /etc/profile
+source /etc/environment
+用户变量：
+~/.profile
+~/.bashrc
+source ~/.profile
+source ~/.bashrc
+
+
+47【pip】
+pip install --upgrade pip
+
+
+pip --default-timeout=100 install -U pip
+
+
+pip install web.py -i http://pypi.douban.com/simple
+
+
+http://pypi.douban.com/  豆瓣
+http://pypi.hustunique.com/  华中理工大学
+http://pypi.sdutlinux.org/  山东理工大学
+http://pypi.mirrors.ustc.edu.cn/  中国科学技术大学
+http://pypi.tuna.tsinghua.edu.cn/simple 教育网
+
+
+vim ~/.pip/pip.conf
+[global]
+timeout = 100
+index-url = http://pypi.douban.com/simple
+
+
+
+
+trusted-host =  pypi.douban.com
+index-url = http://pypi.douban.com/simple
+
+
+这里以豆瓣的源为例，由于最新的pip安装需要使用的https加密，所以在此需要添加trusted-host
+
+
+
+
+48【pip模块版本】
+pip list
+sudo pip install --upgrade pip
+【count】
+ls -l |grep "^-"|wc -l
+统计当前文件夹下文件的个数，包括子文件夹里的 
+ls -lR|grep "^-"|wc -l
+
+
+49【编辑文本】
+sed -i '$a\要插入的文字' file.txt
+
+
+50【watch】
+watch -n 1 nvidia-smi
+
+
+51【copy files】
+cp -r /home/project ./
+
+
+52【You should manually point CMake variable OpenCV_DIR to your build of OpenCV library.】
+cmake -D OpenCV_DIR=/home/gpu/opencv-3.1.0/build/ ..
+
+
+53【sli】
+nvidia-xconfig --sli=on
+Go to /etc/X11 and configure xorg.conf
+
+
+
+
+
+54【caffe】
+&后台
+./examples/cifar/train_quick.sh >& cifar.log &
+后台换前台
+tail -f cifar.log
+提取loss,管道|前输出做后输入
+cat cifar.log | grep "Train net output" | awk '{print $11}'
+训练
+./build/tools/caffe train --solver=models/bvlc_reference_caffenet/solver.prototxt
+计时（针对已经好的网络）
+./build/tools/caffe time --model=models/bvlc_reference_caffenet/train_val.prototxt
+继承上一个快照
+./build/tools/caffe train --solver=models/bvlc_reference_caffenet/solver.prototxt --snapshot=models/bvlc_reference_caffenet/caffenet_train_10000.solverstate
